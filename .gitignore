@@ -1,0 +1,53 @@
+# --- Global ---
+.env
+*.env
+*.db
+*.sqlite
+*.pkl
+*.bin
+.DS_Store
+
+# --- Python backend ---
+__pycache__/
+*.pyc
+*.ipynb_checkpoints/
+venv/
+.env/
+uploads/
+models/
+data/
+cache/
+logs/
+
+# Jupyter notebook outputs (heavy)
+# *.ipynb
+# !backend/*.ipynb   # keep only your main notebook
+
+# --- Node / Frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+frontend/.eslintcache
+frontend/*.pem
+frontend/*.cert
+
+# If root accidentally gets node modules again
+node_modules/
+
+# --- Vite ---
+**/dist/
+**/build/
+
+# --- Certificates & generated files ---
+*.pem
+*.crt
+*.key
+
+# --- Saved RAG embeddings etc ---
+embeddings/
+vectorstore/
+chunks/
+
+# --- OS ---
+Thumbs.db
