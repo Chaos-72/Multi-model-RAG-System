@@ -8,46 +8,114 @@
 
 # **Spectra – Multimodal RAG System**
 
-A powerful multimodal Retrieval-Augmented Generation (RAG) system capable of understanding **text, PDFs, and images**, retrieving relevant context, and generating grounded answers using LLMs (Gemini or NVIDIA NIM).
+
+## Project Goal
+
+The goal of this project was to build an intelligent chatbot capable of understanding and answering questions from complex PDF documents using a **Retrieval-Augmented Generation (RAG)** approach.
+
+The system was designed to go beyond simple text-based retrieval by exploring **multimodal capabilities**, enabling it to process both textual content and visual elements such as images and diagrams. Additionally, the project aimed to evolve into a user-friendly application with features like document upload, conversational interaction, and context-aware responses with citations.
 
 ---
 
-## 🚀 **Features**
+## Workflow
 
-### **1. Multimodal Input Support**
+The project was developed in a structured manner, starting with a basic RAG pipeline and progressively incorporating multimodal capabilities and system improvements.
 
-* Text files
-* PDFs
-* Images (PNG/JPG)
-* Combined multimodal retrieval
+### 1. Document Ingestion and Processing
 
-### **2. Advanced RAG Pipeline**
+A pipeline was built to extract content from PDF documents using **PyMuPDF (fitz)**. The system retrieves both text and embedded images from each page.
 
-* Chunking + preprocessing
-* Text & image embeddings
-* Vector database storage (FAISS/Chroma)
-* Hybrid retrieval
-* Context-aware response generation
+To ensure efficient processing, the extracted text was split into smaller chunks using **RecursiveCharacterTextSplitter**, maintaining contextual continuity through overlapping segments. This step is crucial for improving retrieval quality and handling large documents.
 
-### **3. Multiple LLM Providers**
+---
 
-* **Google Gemini (Vision + Text)**
-* **NVIDIA NIM / OpenAI-Compatible models**
+### 2. Embedding Strategy
 
-### **4. Modern Frontend**
+The system converts extracted content into vector representations for similarity-based retrieval.
 
-Built using:
+* **Text and image embeddings** were initially generated using the **CLIP model**, allowing both modalities to exist in a shared embedding space.
+* This enabled cross-modal retrieval (e.g., retrieving images using text queries).
 
-* React
-* Vite
-* Tailwind
-* Markdown rendering
+However, during experimentation, it was observed that CLIP is not optimal for long-form text, leading to a shift in focus toward improving text embedding strategies for better semantic understanding.
 
-### **5. Python Backend**
+---
 
-* FastAPI 
-* LangChain - Handles embedding, vector DB, and query pipeline
-* Clean API endpoints for uploading, embedding, and chatting
+### 3. Vector Storage and Retrieval
+
+All embeddings were stored in a **FAISS vector database**, enabling efficient similarity search.
+
+During query time:
+
+1. The user query is converted into an embedding.
+2. The system retrieves the most relevant chunks using vector similarity.
+3. Both text and image-related results are considered for context building.
+
+This retrieval mechanism ensures that only relevant information is passed to the language model.
+
+---
+
+### 4. Context Construction and Multimodal Handling
+
+The retrieved results are formatted into a structured context, including:
+
+* Text excerpts with metadata (e.g., page numbers)
+* Images encoded in base64 format
+
+This context is carefully constructed to provide meaningful input to the generative model, enabling it to reason over both textual and visual information.
+
+---
+
+### 5. Response Generation
+
+The system uses **Google Gemini (via `ChatGoogleGenerativeAI`)** to generate answers.
+
+The model receives:
+
+* The user’s query
+* Retrieved contextual information
+
+It produces responses grounded in the document content. Additionally, retrieved snippets are logged and displayed, allowing traceability and supporting citation-based answers.
+
+---
+
+### 6. Debugging and Optimization
+
+Several challenges were identified and addressed during development:
+
+* Fixing embedding-related errors and inconsistencies
+* Handling poor retrieval quality due to unsuitable embedding models
+* Managing noisy PDF text (headers, footers, fragmented content)
+* Improving prompt structure for better response generation
+* Experimenting with extraction of vector graphics (SVG) for diagrams
+
+These efforts helped improve system reliability and highlighted limitations in multimodal processing.
+
+---
+
+### 7. Transition Toward Application Layer
+
+After stabilizing the core pipeline, the focus shifted toward building a more practical system by planning:
+
+* A modern UI with document upload (drag-and-drop)
+* Chat-based interaction similar to conversational AI systems
+* Persistent chat history linked to user accounts
+* Responses with proper citations for better explainability
+
+---
+
+## Final Outcome
+
+The final system is a working **RAG-based chatbot** capable of processing PDF documents and answering user queries using retrieved contextual information.
+
+It successfully demonstrates:
+
+* End-to-end document understanding pipeline
+* Efficient retrieval using vector similarity search
+* Context-aware answer generation using a large language model
+
+While the multimodal component is still evolving, the project provided strong insights into handling images and diagrams within document-based QA systems. It also helped identify practical challenges such as embedding limitations, noisy data, and complexity in extracting meaningful visual content.
+
+Overall, the project establishes a solid foundation for building advanced AI-powered document assistants and can be further enhanced into a production-ready system with improved embeddings, better preprocessing, scalable infrastructure, and a polished user interface.
 
 ---
 
